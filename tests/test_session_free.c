@@ -124,7 +124,7 @@ static int test_session_free_nonblocking(void)
     test_close_cb_local_close = 0;
 
     rc = libssh2_session_free(session);
-    if(rc || test_send_calls || test_close_cb_calls != 1 ||
+    if(rc || !test_send_calls || test_close_cb_calls != 1 ||
        !test_close_cb_local_close || test_alloc_outstanding) {
         fprintf(stderr,
                 "nonblocking session_free: rc=%d send=%d close_cb=%d "

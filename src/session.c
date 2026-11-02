@@ -854,6 +854,11 @@ static int session_free(LIBSSH2_SESSION *session)
         /* !checksrc! disable EQUALSNULL 1 */
         while((ch = ssh2_list_first(&session->channels)) != NULL) {
             rc = ssh2_channel_free(ch);
+            if(rc == LIBSSH2_ERROR_EAGAIN && !session->api_block_mode) {
+                session->force_free = 1;
+                rc = ssh2_channel_free(ch);
+                session->force_free = 0;
+            }
             if(rc == LIBSSH2_ERROR_EAGAIN)
                 return rc;
         }
